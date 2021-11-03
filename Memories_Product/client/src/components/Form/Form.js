@@ -26,15 +26,15 @@ const Form = ({ currentId, setCurrentId }) => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if (currentId) {
-            dispatch(updatePost(currentId, postData))
-        } else {
+        if (currentId === 0) {
             dispatch(createPost(postData))
+        } else {
+            dispatch(updatePost(currentId, postData))
         }
         clear()
     }
     const clear = () => {
-        setCurrentId(null)
+        setCurrentId(0)
         setPostData({
             creator: '', title: '', message: '', tags: '', selectedFile: ''
         })
@@ -43,7 +43,7 @@ const Form = ({ currentId, setCurrentId }) => {
     return (
         <Paper className={classes.paper} >
             <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit} >
-                <Typography variant="h6" > {currentId ? 'Editing' : 'Creating'} a Memory </Typography>
+                <Typography variant="h6" > {currentId ? `Editing "${post.title}"` : 'Creating'} a Memory </Typography>
                 <TextField name="creator"
                     variant="outlined"
                     label="Creator"
@@ -73,7 +73,7 @@ const Form = ({ currentId, setCurrentId }) => {
                     label="Tags"
                     fullWidth value={postData.tags}
                     onChange={
-                        (e) => { setPostData({ ...postData, tags: e.target.value }) }
+                        (e) => { setPostData({ ...postData, tags: e.target.value.split(',') }) }
                     }
                 />
                 <div className={classes.fileInput} > < FileBase type="file"
